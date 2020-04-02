@@ -20,6 +20,12 @@
 #define TLS_PEER_CERTIFICATE_CHAIN        95
 #define TLS_ID                            96
 
+/* added by Nathaniel */
+#define TLS_TRUSTED_CIPHERS               97
+#define TLS_CLIENT_CONNECTION             98
+#define TLS_SERVER_CONNECTION             99
+
+
 /* TCP options */
 #define TCP_UPGRADE_TLS         33
 
