@@ -24,106 +24,110 @@ static const struct nla_policy ssa_nl_policy[SSA_NL_A_MAX + 1] = {
 };
 
 static struct genl_ops ssa_nl_ops[] = {
-        {
-                .cmd = SSA_NL_C_SOCKET_NOTIFY,
-                .flags = GENL_ADMIN_PERM,
-                .policy = ssa_nl_policy,
-                .doit = nl_fail,
-                .dumpit = NULL,
-        },
-        {
-                .cmd = SSA_NL_C_SETSOCKOPT_NOTIFY,
-                .flags = GENL_ADMIN_PERM,
-                .policy = ssa_nl_policy,
-                .doit = nl_fail,
-                .dumpit = NULL,
-        },
-        {
-                .cmd = SSA_NL_C_GETSOCKOPT_NOTIFY,
-                .flags = GENL_ADMIN_PERM,
-                .policy = ssa_nl_policy,
-                .doit = nl_fail,
-                .dumpit = NULL,
-        },
-        {
-                .cmd = SSA_NL_C_BIND_NOTIFY,
-                .flags = GENL_ADMIN_PERM,
-                .policy = ssa_nl_policy,
-                .doit = nl_fail,
-                .dumpit = NULL,
-        },
-        {
-                .cmd = SSA_NL_C_CONNECT_NOTIFY,
-                .flags = GENL_ADMIN_PERM,
-                .policy = ssa_nl_policy,
-                .doit = nl_fail,
-                .dumpit = NULL,
-        },
-        {
-                .cmd = SSA_NL_C_LISTEN_NOTIFY,
-                .flags = GENL_ADMIN_PERM,
-                .policy = ssa_nl_policy,
-                .doit = nl_fail,
-                .dumpit = NULL,
-        },
-        {
-                .cmd = SSA_NL_C_ACCEPT_NOTIFY,
-                .flags = GENL_ADMIN_PERM,
-                .policy = ssa_nl_policy,
-                .doit = nl_fail,
-                .dumpit = NULL,
-        },
-        {
-                .cmd = SSA_NL_C_CLOSE_NOTIFY,
-                .flags = GENL_ADMIN_PERM,
-                .policy = ssa_nl_policy,
-                .doit = nl_fail,
-                .dumpit = NULL,
-        },
-        {
-                .cmd = SSA_NL_C_RETURN,
-                .flags = GENL_ADMIN_PERM,
-                .policy = ssa_nl_policy,
-                .doit = daemon_cb,
-                .dumpit = NULL,
-        },
-        {
-                .cmd = SSA_NL_C_DATA_RETURN,
-                .flags = GENL_ADMIN_PERM,
-                .policy = ssa_nl_policy,
-                .doit = daemon_data_cb,
-                .dumpit = NULL,
-        },
-        {
-                .cmd = SSA_NL_C_HANDSHAKE_RETURN,
-                .flags = GENL_ADMIN_PERM,
-                .policy = ssa_nl_policy,
-                .doit = daemon_handshake_cb,
-                .dumpit = NULL,
-        },
+    {
+        .cmd = SSA_NL_C_SOCKET_NOTIFY,
+        .flags = GENL_ADMIN_PERM,
+        .policy = ssa_nl_policy,
+        .doit = nl_fail,
+        .dumpit = NULL,
+    },
+    {
+        .cmd = SSA_NL_C_SETSOCKOPT_NOTIFY,
+        .flags = GENL_ADMIN_PERM,
+        .policy = ssa_nl_policy,
+        .doit = nl_fail,
+        .dumpit = NULL,
+    },
+    {
+        .cmd = SSA_NL_C_GETSOCKOPT_NOTIFY,
+        .flags = GENL_ADMIN_PERM,
+        .policy = ssa_nl_policy,
+        .doit = nl_fail,
+        .dumpit = NULL,
+    },
+    {
+        .cmd = SSA_NL_C_BIND_NOTIFY,
+        .flags = GENL_ADMIN_PERM,
+        .policy = ssa_nl_policy,
+        .doit = nl_fail,
+        .dumpit = NULL,
+    },
+    {
+        .cmd = SSA_NL_C_CONNECT_NOTIFY,
+        .flags = GENL_ADMIN_PERM,
+        .policy = ssa_nl_policy,
+        .doit = nl_fail,
+        .dumpit = NULL,
+    },
+    {
+        .cmd = SSA_NL_C_LISTEN_NOTIFY,
+        .flags = GENL_ADMIN_PERM,
+        .policy = ssa_nl_policy,
+        .doit = nl_fail,
+        .dumpit = NULL,
+    },
+    {
+        .cmd = SSA_NL_C_ACCEPT_NOTIFY,
+        .flags = GENL_ADMIN_PERM,
+        .policy = ssa_nl_policy,
+        .doit = nl_fail,
+        .dumpit = NULL,
+    },
+    {
+        .cmd = SSA_NL_C_CLOSE_NOTIFY,
+        .flags = GENL_ADMIN_PERM,
+        .policy = ssa_nl_policy,
+        .doit = nl_fail,
+        .dumpit = NULL,
+    },
+    {
+        .cmd = SSA_NL_C_RETURN,
+        .flags = GENL_ADMIN_PERM,
+        .policy = ssa_nl_policy,
+        .doit = daemon_cb,
+        .dumpit = NULL,
+    },
+    {
+        .cmd = SSA_NL_C_DATA_RETURN,
+        .flags = GENL_ADMIN_PERM,
+        .policy = ssa_nl_policy,
+        .doit = daemon_data_cb,
+        .dumpit = NULL,
+    },
+    {
+        .cmd = SSA_NL_C_HANDSHAKE_RETURN,
+        .flags = GENL_ADMIN_PERM,
+        .policy = ssa_nl_policy,
+        .doit = daemon_handshake_cb,
+        .dumpit = NULL,
+    },
 };
 
 static const struct genl_multicast_group ssa_nl_grps[] = {
-        [SSA_NL_NOTIFY] = { .name = "notify", },
+    [SSA_NL_NOTIFY] = { .name = "notify", },
 };
 
 static struct genl_family ssa_nl_family = {
-        .module = THIS_MODULE,
-        .ops = ssa_nl_ops,
-        .n_ops = ARRAY_SIZE(ssa_nl_ops),
-        .mcgrps = ssa_nl_grps,
-        .n_mcgrps = ARRAY_SIZE(ssa_nl_grps),
-        .hdrsize = 0,
-        .name = "SSA",
-        .version = 1,
-        .maxattr = SSA_NL_A_MAX,
+    .module = THIS_MODULE,
+    .ops = ssa_nl_ops,
+    .n_ops = ARRAY_SIZE(ssa_nl_ops),
+    .mcgrps = ssa_nl_grps,
+    .n_mcgrps = ARRAY_SIZE(ssa_nl_grps),
+    .hdrsize = 0,
+    .name = "SSA",
+    .version = 1,
+    .maxattr = SSA_NL_A_MAX,
 };
 
 int nl_fail(struct sk_buff* skb, struct genl_info* info) {
-        printk(KERN_ALERT "Kernel receieved an SSA netlink notification. This should never happen.\n");
-        return -1;
+    printk(KERN_ALERT "Kernel receieved an SSA netlink notification. This should never happen.\n");
+    return -1;
 }
- 
+
+/**
+ * This is the callback function that is triggered when netlink_notify_kernel()
+ * is called from the daemon.
+ */
 int daemon_cb(struct sk_buff* skb, struct genl_info* info) {
 	struct nlattr* na;
 	unsigned long key;
@@ -145,6 +149,10 @@ int daemon_cb(struct sk_buff* skb, struct genl_info* info) {
         return 0;
 }
 
+/**
+ * This is the callback function for when netlink_send_and_notify_kernel is
+ * called from the daemon.
+ */
 int daemon_data_cb(struct sk_buff* skb, struct genl_info* info) {
 	struct nlattr* na;
 	unsigned long key;
@@ -169,6 +177,10 @@ int daemon_data_cb(struct sk_buff* skb, struct genl_info* info) {
         return 0;
 }
 
+/**
+ * This is the callback function that is triggered when
+ * netlink_handshake_notify_kernel() is called from the daemon.
+ */
 int daemon_handshake_cb(struct sk_buff* skb, struct genl_info* info) {
 	struct nlattr* na;
 	unsigned long key;
@@ -199,6 +211,10 @@ void unregister_netlink() {
 	return;
 }
 
+/**
+ * Forms and sends a netlink notification to the daemon to create a new
+ * socket and assign it the given id.
+ */
 int send_socket_notification(unsigned long id, char* comm, int port_id) {
 	struct sk_buff* skb;
 	int ret;
@@ -238,9 +254,14 @@ int send_socket_notification(unsigned long id, char* comm, int port_id) {
 	if (ret != 0) {
 		printk(KERN_ALERT "Failed in gemlmsg_unicast [socket notify]\n (%d)", ret);
 	}
+
 	return 0;
 }
 
+/**
+ * Forms and sends a netlink notification to the daemon to perform a setsockopt
+ * command on the socket with given id.
+ */
 int send_setsockopt_notification(unsigned long id, int level, int optname, void* optval, int optlen, int port_id) {
 	struct sk_buff* skb;
 	int ret;
@@ -296,6 +317,10 @@ int send_setsockopt_notification(unsigned long id, int level, int optname, void*
 	return 0;
 }
 
+/**
+ * Forms and sends a netlink notification to the daemon to perform a getsockopt
+ * command on the socket with given id.
+ */
 int send_getsockopt_notification(unsigned long id, int level, int optname, int port_id) {
 	struct sk_buff* skb;
 	int ret;
@@ -344,6 +369,10 @@ int send_getsockopt_notification(unsigned long id, int level, int optname, int p
 	return 0;
 }
 
+/**
+ * Forms and sends a netlink notification to the daemon to bind the socket
+ * specified by id to a given address.
+ */
 int send_bind_notification(unsigned long id, struct sockaddr* int_addr, struct sockaddr* ext_addr, int port_id) {
 	struct sk_buff* skb;
 	int ret;
@@ -392,6 +421,10 @@ int send_bind_notification(unsigned long id, struct sockaddr* int_addr, struct s
 	return 0;
 }
 
+/**
+ * Forms and sends a netlink notification to the daemon to connect the socket
+ * specified by id to a given address.
+ */
 int send_connect_notification(unsigned long id, struct sockaddr* int_addr, struct sockaddr* rem_addr, int blocking, int port_id) {
 	struct sk_buff* skb;
 	int ret;
@@ -447,6 +480,10 @@ int send_connect_notification(unsigned long id, struct sockaddr* int_addr, struc
 	return 0;
 }
 
+/**
+ * Forms and sends a netlink notification to the daemon to set the socket to
+ * listen for incoming connections on its port and address.
+ */
 int send_listen_notification(unsigned long id, struct sockaddr* int_addr, struct sockaddr* ext_addr, int port_id) {
 	struct sk_buff* skb;
 	int ret;
@@ -495,6 +532,10 @@ int send_listen_notification(unsigned long id, struct sockaddr* int_addr, struct
 	return 0;
 }
 
+/**
+ * Forms and sends a netlink notification to the daemon to accept a new
+ * connection on the listening socket specified by id.
+ */
 int send_accept_notification(unsigned long id, struct sockaddr* int_addr, int port_id) {
 	struct sk_buff* skb;
 	int ret;
@@ -538,6 +579,10 @@ int send_accept_notification(unsigned long id, struct sockaddr* int_addr, int po
 	return 0;
 }
 
+/**
+ * Forms and sends a netlink notification to the daemon to close the socket
+ * specified by id.
+ */
 int send_close_notification(unsigned long id, int port_id) {
 	struct sk_buff* skb;
 	int ret;
@@ -565,7 +610,7 @@ int send_close_notification(unsigned long id, int port_id) {
 	/*ret = genlmsg_multicast(&ssa_nl_family, skb, 0, SSA_NL_NOTIFY, GFP_ATOMIC);
 	if (ret != 0) {
 		printk(KERN_ALERT "Failed in gemlmsg_multicast [close notify] (%d)\n", ret);
-		
+
 	}*/
 	ret = genlmsg_unicast(&init_net, skb, port_id);
 	if (ret != 0) {
@@ -573,4 +618,3 @@ int send_close_notification(unsigned long id, int port_id) {
 	}
 	return 0;
 }
-
