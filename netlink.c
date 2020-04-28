@@ -10,118 +10,118 @@ int daemon_data_cb(struct sk_buff* skb, struct genl_info* info);
 int daemon_handshake_cb(struct sk_buff* skb, struct genl_info* info);
 
 static const struct nla_policy ssa_nl_policy[SSA_NL_A_MAX + 1] = {
-    [SSA_NL_A_UNSPEC] = { .type = NLA_UNSPEC },
-    [SSA_NL_A_ID] = { .type = NLA_UNSPEC },
-    [SSA_NL_A_BLOCKING] = { .type = NLA_UNSPEC },
-    [SSA_NL_A_COMM] = { .type = NLA_UNSPEC },
-    [SSA_NL_A_SOCKADDR_INTERNAL] = { .type = NLA_UNSPEC },
-    [SSA_NL_A_SOCKADDR_EXTERNAL] = { .type = NLA_UNSPEC },
-    [SSA_NL_A_SOCKADDR_REMOTE] = { .type = NLA_UNSPEC },
-    [SSA_NL_A_OPTLEVEL] = { .type = NLA_UNSPEC },
-    [SSA_NL_A_OPTNAME] = { .type = NLA_UNSPEC },
-    [SSA_NL_A_OPTVAL] = { .type = NLA_UNSPEC },
-    [SSA_NL_A_RETURN] = { .type = NLA_UNSPEC },
+	[SSA_NL_A_UNSPEC] = { .type = NLA_UNSPEC },
+	[SSA_NL_A_ID] = { .type = NLA_UNSPEC },
+	[SSA_NL_A_BLOCKING] = { .type = NLA_UNSPEC },
+	[SSA_NL_A_COMM] = { .type = NLA_UNSPEC },
+	[SSA_NL_A_SOCKADDR_INTERNAL] = { .type = NLA_UNSPEC },
+	[SSA_NL_A_SOCKADDR_EXTERNAL] = { .type = NLA_UNSPEC },
+	[SSA_NL_A_SOCKADDR_REMOTE] = { .type = NLA_UNSPEC },
+	[SSA_NL_A_OPTLEVEL] = { .type = NLA_UNSPEC },
+	[SSA_NL_A_OPTNAME] = { .type = NLA_UNSPEC },
+	[SSA_NL_A_OPTVAL] = { .type = NLA_UNSPEC },
+	[SSA_NL_A_RETURN] = { .type = NLA_UNSPEC },
 };
 
 static struct genl_ops ssa_nl_ops[] = {
-    {
-        .cmd = SSA_NL_C_SOCKET_NOTIFY,
-        .flags = GENL_ADMIN_PERM,
-        .policy = ssa_nl_policy,
-        .doit = nl_fail,
-        .dumpit = NULL,
-    },
-    {
-        .cmd = SSA_NL_C_SETSOCKOPT_NOTIFY,
-        .flags = GENL_ADMIN_PERM,
-        .policy = ssa_nl_policy,
-        .doit = nl_fail,
-        .dumpit = NULL,
-    },
-    {
-        .cmd = SSA_NL_C_GETSOCKOPT_NOTIFY,
-        .flags = GENL_ADMIN_PERM,
-        .policy = ssa_nl_policy,
-        .doit = nl_fail,
-        .dumpit = NULL,
-    },
-    {
-        .cmd = SSA_NL_C_BIND_NOTIFY,
-        .flags = GENL_ADMIN_PERM,
-        .policy = ssa_nl_policy,
-        .doit = nl_fail,
-        .dumpit = NULL,
-    },
-    {
-        .cmd = SSA_NL_C_CONNECT_NOTIFY,
-        .flags = GENL_ADMIN_PERM,
-        .policy = ssa_nl_policy,
-        .doit = nl_fail,
-        .dumpit = NULL,
-    },
-    {
-        .cmd = SSA_NL_C_LISTEN_NOTIFY,
-        .flags = GENL_ADMIN_PERM,
-        .policy = ssa_nl_policy,
-        .doit = nl_fail,
-        .dumpit = NULL,
-    },
-    {
-        .cmd = SSA_NL_C_ACCEPT_NOTIFY,
-        .flags = GENL_ADMIN_PERM,
-        .policy = ssa_nl_policy,
-        .doit = nl_fail,
-        .dumpit = NULL,
-    },
-    {
-        .cmd = SSA_NL_C_CLOSE_NOTIFY,
-        .flags = GENL_ADMIN_PERM,
-        .policy = ssa_nl_policy,
-        .doit = nl_fail,
-        .dumpit = NULL,
-    },
-    {
-        .cmd = SSA_NL_C_RETURN,
-        .flags = GENL_ADMIN_PERM,
-        .policy = ssa_nl_policy,
-        .doit = daemon_cb,
-        .dumpit = NULL,
-    },
-    {
-        .cmd = SSA_NL_C_DATA_RETURN,
-        .flags = GENL_ADMIN_PERM,
-        .policy = ssa_nl_policy,
-        .doit = daemon_data_cb,
-        .dumpit = NULL,
-    },
-    {
-        .cmd = SSA_NL_C_HANDSHAKE_RETURN,
-        .flags = GENL_ADMIN_PERM,
-        .policy = ssa_nl_policy,
-        .doit = daemon_handshake_cb,
-        .dumpit = NULL,
-    },
+	{
+		.cmd = SSA_NL_C_SOCKET_NOTIFY,
+		.flags = GENL_ADMIN_PERM,
+		.policy = ssa_nl_policy,
+		.doit = nl_fail,
+		.dumpit = NULL,
+	},
+	{
+		.cmd = SSA_NL_C_SETSOCKOPT_NOTIFY,
+		.flags = GENL_ADMIN_PERM,
+		.policy = ssa_nl_policy,
+		.doit = nl_fail,
+		.dumpit = NULL,
+	},
+	{
+		.cmd = SSA_NL_C_GETSOCKOPT_NOTIFY,
+		.flags = GENL_ADMIN_PERM,
+		.policy = ssa_nl_policy,
+		.doit = nl_fail,
+		.dumpit = NULL,
+	},
+	{
+		.cmd = SSA_NL_C_BIND_NOTIFY,
+		.flags = GENL_ADMIN_PERM,
+		.policy = ssa_nl_policy,
+		.doit = nl_fail,
+		.dumpit = NULL,
+	},
+	{
+		.cmd = SSA_NL_C_CONNECT_NOTIFY,
+		.flags = GENL_ADMIN_PERM,
+		.policy = ssa_nl_policy,
+		.doit = nl_fail,
+		.dumpit = NULL,
+	},
+	{
+		.cmd = SSA_NL_C_LISTEN_NOTIFY,
+		.flags = GENL_ADMIN_PERM,
+		.policy = ssa_nl_policy,
+		.doit = nl_fail,
+		.dumpit = NULL,
+	},
+	{
+		.cmd = SSA_NL_C_ACCEPT_NOTIFY,
+		.flags = GENL_ADMIN_PERM,
+		.policy = ssa_nl_policy,
+		.doit = nl_fail,
+		.dumpit = NULL,
+	},
+	{
+		.cmd = SSA_NL_C_CLOSE_NOTIFY,
+		.flags = GENL_ADMIN_PERM,
+		.policy = ssa_nl_policy,
+		.doit = nl_fail,
+		.dumpit = NULL,
+	},
+	{
+		.cmd = SSA_NL_C_RETURN,
+		.flags = GENL_ADMIN_PERM,
+		.policy = ssa_nl_policy,
+		.doit = daemon_cb,
+		.dumpit = NULL,
+	},
+	{
+		.cmd = SSA_NL_C_DATA_RETURN,
+		.flags = GENL_ADMIN_PERM,
+		.policy = ssa_nl_policy,
+		.doit = daemon_data_cb,
+		.dumpit = NULL,
+	},
+	{
+		.cmd = SSA_NL_C_HANDSHAKE_RETURN,
+		.flags = GENL_ADMIN_PERM,
+		.policy = ssa_nl_policy,
+		.doit = daemon_handshake_cb,
+		.dumpit = NULL,
+	},
 };
 
 static const struct genl_multicast_group ssa_nl_grps[] = {
-    [SSA_NL_NOTIFY] = { .name = "notify", },
+	[SSA_NL_NOTIFY] = { .name = "notify", },
 };
 
 static struct genl_family ssa_nl_family = {
-    .module = THIS_MODULE,
-    .ops = ssa_nl_ops,
-    .n_ops = ARRAY_SIZE(ssa_nl_ops),
-    .mcgrps = ssa_nl_grps,
-    .n_mcgrps = ARRAY_SIZE(ssa_nl_grps),
-    .hdrsize = 0,
-    .name = "SSA",
-    .version = 1,
-    .maxattr = SSA_NL_A_MAX,
+	.module = THIS_MODULE,
+	.ops = ssa_nl_ops,
+	.n_ops = ARRAY_SIZE(ssa_nl_ops),
+	.mcgrps = ssa_nl_grps,
+	.n_mcgrps = ARRAY_SIZE(ssa_nl_grps),
+	.hdrsize = 0,
+	.name = "SSA",
+	.version = 1,
+	.maxattr = SSA_NL_A_MAX,
 };
 
 int nl_fail(struct sk_buff* skb, struct genl_info* info) {
-    printk(KERN_ALERT "Kernel receieved an SSA netlink notification. This should never happen.\n");
-    return -1;
+	printk(KERN_ALERT "Kernel receieved an SSA netlink notification. This should never happen.\n");
+	return -1;
 }
 
 /**
