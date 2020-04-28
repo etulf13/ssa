@@ -94,6 +94,7 @@ void report_return(unsigned long key, int ret) {
 	sock_data = get_tls_sock_data(key);
 	//BUG_ON(sock_data == NULL);
 	if (sock_data == NULL) {
+		printk(KERN_ERR "sock_data null: %s %d \n",__FUNCTION__,__LINE__);
 		return;
 	}
 	sock_data->response = ret;
@@ -106,6 +107,7 @@ void report_data_return(unsigned long key, char* data, unsigned int len) {
 	sock_data = get_tls_sock_data(key);
 	//BUG_ON(sock_data == NULL);
 	if (sock_data == NULL) {
+		printk(KERN_ERR "sock_data null: %s %d \n",__FUNCTION__,__LINE__);
 		return;
 	}
 	sock_data->rdata = kmalloc(len, GFP_KERNEL);
@@ -127,6 +129,7 @@ void report_handshake_finished(unsigned long key, int response) {
 	sock_data = get_tls_sock_data(key);
 	//BUG_ON(sock_data == NULL);
 	if (sock_data == NULL) {
+		printk(KERN_ERR "sock_data null: %s %d \n",__FUNCTION__,__LINE__);
 		return;
 	}
 	sock_data->response = response;
@@ -151,7 +154,7 @@ int tls_common_setsockopt(tls_sock_data_t* sock_data, struct socket *sock, int l
 	int timeout_val = RESPONSE_TIMEOUT;
 	char* koptval;
 	if (optval == NULL) {
-		return -EINVAL;	
+		return -EINVAL;
 	}
 	if (optlen == 0) {
 		return -EINVAL;
@@ -268,7 +271,7 @@ int tls_common_getsockopt(tls_sock_data_t* sock_data, struct socket *sock, int l
 			return sock_data->response;
 		}
 		/* We set this to the minimum of actual data length and size
-		 * of user's buffer rather than aborting if the user one is 
+		 * of user's buffer rather than aborting if the user one is
 		 * smaller because POSIX says to silently truncate in this
 		 * case */
 		len = min_t(unsigned int, len, sock_data->rdata_len);
@@ -290,7 +293,7 @@ int tls_common_getsockopt(tls_sock_data_t* sock_data, struct socket *sock, int l
 	default:
 		return -EOPNOTSUPP;
 	}
-	
+
 	return 0;
 }
 
@@ -323,7 +326,7 @@ int get_remote_hostname(tls_sock_data_t* sock_data, char __user *optval, int* __
 	}
 	hostname_len = strnlen(hostname, MAX_HOST_LEN) + 1;
 	if (*len < hostname_len) {
-		return -EINVAL;	
+		return -EINVAL;
 	}
 	if (copy_to_user(optval, hostname, hostname_len) != 0 ) {
 		return -EFAULT;
@@ -347,11 +350,11 @@ int get_id(tls_sock_data_t* sock_data, char __user *optval, int* __user optlen) 
 	return 0;
 }
 
-/* 
+/*
  * Tests whether a socket option input contains only valid host name characters
  * as defined by RFC 952 and RFC 1123.
  * @param	str - A pointer to a string to be checked
- * @param	len - The length of str, including null terminator 
+ * @param	len - The length of str, including null terminator
  * @return	1 if string is valid and 0 otherwise
  */
 int is_valid_host_string(char* str, int len) {
