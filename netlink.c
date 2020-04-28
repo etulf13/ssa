@@ -10,17 +10,17 @@ int daemon_data_cb(struct sk_buff* skb, struct genl_info* info);
 int daemon_handshake_cb(struct sk_buff* skb, struct genl_info* info);
 
 static const struct nla_policy ssa_nl_policy[SSA_NL_A_MAX + 1] = {
-        [SSA_NL_A_UNSPEC] = { .type = NLA_UNSPEC },
-	[SSA_NL_A_ID] = { .type = NLA_UNSPEC },
-	[SSA_NL_A_BLOCKING] = { .type = NLA_UNSPEC },
-	[SSA_NL_A_COMM] = { .type = NLA_UNSPEC },
-        [SSA_NL_A_SOCKADDR_INTERNAL] = { .type = NLA_UNSPEC },
-        [SSA_NL_A_SOCKADDR_EXTERNAL] = { .type = NLA_UNSPEC },
-	[SSA_NL_A_SOCKADDR_REMOTE] = { .type = NLA_UNSPEC },
-	[SSA_NL_A_OPTLEVEL] = { .type = NLA_UNSPEC },
-	[SSA_NL_A_OPTNAME] = { .type = NLA_UNSPEC },
-	[SSA_NL_A_OPTVAL] = { .type = NLA_UNSPEC },
-	[SSA_NL_A_RETURN] = { .type = NLA_UNSPEC },
+    [SSA_NL_A_UNSPEC] = { .type = NLA_UNSPEC },
+    [SSA_NL_A_ID] = { .type = NLA_UNSPEC },
+    [SSA_NL_A_BLOCKING] = { .type = NLA_UNSPEC },
+    [SSA_NL_A_COMM] = { .type = NLA_UNSPEC },
+    [SSA_NL_A_SOCKADDR_INTERNAL] = { .type = NLA_UNSPEC },
+    [SSA_NL_A_SOCKADDR_EXTERNAL] = { .type = NLA_UNSPEC },
+    [SSA_NL_A_SOCKADDR_REMOTE] = { .type = NLA_UNSPEC },
+    [SSA_NL_A_OPTLEVEL] = { .type = NLA_UNSPEC },
+    [SSA_NL_A_OPTNAME] = { .type = NLA_UNSPEC },
+    [SSA_NL_A_OPTVAL] = { .type = NLA_UNSPEC },
+    [SSA_NL_A_RETURN] = { .type = NLA_UNSPEC },
 };
 
 static struct genl_ops ssa_nl_ops[] = {
