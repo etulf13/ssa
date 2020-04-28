@@ -15,3 +15,7 @@ modules.order
 .tmp_versions/*
 *.swp
 *.txt
+tls_upgrade.o.ur-safe
+tls_inet.o.ur-safe
+tls_common.o.ur-safe
+.cache.mk
