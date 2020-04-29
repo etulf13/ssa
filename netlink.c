@@ -32,7 +32,7 @@ static const struct nla_policy ssa_nl_policy[SSA_NL_A_MAX + 1] = {
 		.validation_type = NLA_VALIDATE_NONE,
 	},
 	[SSA_NL_A_SOCKADDR_INTERNAL] = {
-		.type = NLA_UNSPEC
+		.type = NLA_UNSPEC,
 		.len = 0,
 		.validation_type = NLA_VALIDATE_NONE,
 	},
@@ -273,7 +273,7 @@ int send_socket_notification(unsigned long id, char* comm, int port_id) {
 	int msg_size = nla_total_size(sizeof(unsigned long)) +
 			nla_total_size(strlen(comm)+1);
 
-	printk(KERN_INFO "Sending socket notification to daemon; id: %i\n", id);
+	printk(KERN_INFO "Sending socket notification to daemon; id: %lu\n", id);
 
 	skb = genlmsg_new(msg_size, GFP_KERNEL);
 	if (skb == NULL) {
@@ -308,7 +308,7 @@ int send_socket_notification(unsigned long id, char* comm, int port_id) {
 		printk(KERN_ALERT "Failed in gemlmsg_unicast [socket notify]\n (%d)", ret);
 	}
 
-	printk(KERN_INFO "Successfully sent socket notification for id: %i\n", id);
+	printk(KERN_INFO "Successfully sent socket notification for id: %lu\n", id);
 
 	return 0;
 }
@@ -321,7 +321,7 @@ int send_setsockopt_notification(unsigned long id, int level, int optname, void*
 			2 * nla_total_size(sizeof(int)) +
 			nla_total_size(optlen);
 
-	printk(KERN_INFO "Sending setsockopt notification to daemon for id: %i\n", id);
+	printk(KERN_INFO "Sending setsockopt notification to daemon for id: %lu\n", id);
 
 	skb = genlmsg_new(msg_size, GFP_KERNEL);
 	if (skb == NULL) {
@@ -368,7 +368,7 @@ int send_setsockopt_notification(unsigned long id, int level, int optname, void*
 		printk(KERN_ALERT "Failed in gemlmsg_unicast [setsockopt notify]\n (%d)", ret);
 	}
 
-	printk(KERN_INFO "Successfully sent setsockopt notification for id: %i\n", id);
+	printk(KERN_INFO "Successfully sent setsockopt notification for id: %lu\n", id);
 
 	return 0;
 }
@@ -479,7 +479,7 @@ int send_connect_notification(unsigned long id, struct sockaddr* int_addr, struc
 			nla_total_size(sizeof(int)) +
 			2 * nla_total_size(sizeof(struct sockaddr));
 
-	printk(KERN_INFO "Sending connect notification to daemon for id: %i\n", id);
+	printk(KERN_INFO "Sending connect notification to daemon for id: %lu\n", id);
 
 	skb = genlmsg_new(msg_size, GFP_KERNEL);
 	if (skb == NULL) {
@@ -526,7 +526,7 @@ int send_connect_notification(unsigned long id, struct sockaddr* int_addr, struc
 		printk(KERN_ALERT "Failed in gemlmsg_unicast [connect notify]\n (%d)", ret);
 	}
 
-	printk(KERN_INFO "Successfully sent connect notification for id: %i\n", id);
+	printk(KERN_INFO "Successfully sent connect notification for id: %lu\n", id);
 
 	return 0;
 }
@@ -628,7 +628,7 @@ int send_close_notification(unsigned long id, int port_id) {
 	void* msg_head;
 	int msg_size = nla_total_size(sizeof(unsigned long));
 
-	printk(KERN_INFO "Sending close notification to daemon for id: %i\n", id);
+	printk(KERN_INFO "Sending close notification to daemon for id: %lu\n", id);
 
 	skb = genlmsg_new(msg_size, GFP_KERNEL);
 	if (skb == NULL) {
@@ -658,7 +658,7 @@ int send_close_notification(unsigned long id, int port_id) {
 		printk(KERN_ALERT "Failed in gemlmsg_unicast [close notify]\n (%d)", ret);
 	}
 
-	printk(KERN_INFO "Successfully sent close notification for id: %i\n", id);
+	printk(KERN_INFO "Successfully sent close notification for id: %lu\n", id);
 
 	return 0;
 }
