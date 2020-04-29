@@ -3,7 +3,7 @@
  * Copyright (C) 2017-2018, Mark O'Neill <mark@markoneill.name>
  * All rights reserved.
  * https://owntrust.org
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -71,26 +71,24 @@ static struct inet_protosw tls_stream_protosw = {
 int (*orig_tcp_setsockopt)(struct sock*, int, int, char __user*, unsigned int);
 
 static int __init ssa_init(void) {
-	int err;	
+	int err;
 	unsigned long kallsyms_err;
 	static const struct net_protocol *tcp_protocol_lookup;
 
 	printk(KERN_INFO "Initializing Secure Socket API module\n");
 	printk(KERN_INFO "Found %u CPUs\n", nr_cpu_ids);
-	
+
 	/* initialize our global data structures for TLS handling */
 	tls_setup();
 
 	/* Obtain referencess to desired TLS handling functions */
-	if (internal_transport_mode == INET_MODE) {
+	if (internal_transport_mode == INET_MODE)
 		err = set_tls_prot_inet_stream(&tls_prot, &tls_proto_ops);
-	}
-	else {
+	else /* transport mode == UNIX_MODE */
 		err = set_tls_prot_unix_stream(&tls_prot, &tls_proto_ops);
-	}
-	if (err != 0) {
+
+	if (err != 0)
 		goto out;
-	}
 
 	/* Initialize the TLS protocol */
 	/* XXX Do we really NOT want to allocate cache space here? Why is 2nd param 0? */
@@ -103,7 +101,7 @@ static int __init ssa_init(void) {
 	}
 
 	/*
-	 * Retrieve the non-exported tcp_protocol struct address location 
+	 * Retrieve the non-exported tcp_protocol struct address location
 	 * and verify that it was found. If it fails, unregister the protocol
 	 * and exit the module initialization.
 	 */
@@ -126,7 +124,7 @@ static int __init ssa_init(void) {
 		goto out_proto_unregister;
 	}
 	inet_register_protosw(&tls_stream_protosw);
-	
+
 
 	/* Register the setsockopt hooks for TLS upgrades */
 	orig_tcp_setsockopt = tcp_prot.setsockopt;
@@ -156,7 +154,7 @@ static void __exit ssa_exit(void) {
 	/* Unregister the protocols and structs in the reverse order they were registered */
 	inet_del_protocol(&tls_protocol, IPPROTO_TLS);
 	inet_unregister_protosw(&tls_stream_protosw);
-	
+
 	/* Set these pointers to NULL to avoid deleting tcp_prot's shared memory */
 	tls_prot.slab = NULL;
 	tls_prot.rsk_prot = NULL;
