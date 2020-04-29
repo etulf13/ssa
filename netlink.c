@@ -9,98 +9,143 @@ int daemon_cb(struct sk_buff* skb, struct genl_info* info);
 int daemon_data_cb(struct sk_buff* skb, struct genl_info* info);
 int daemon_handshake_cb(struct sk_buff* skb, struct genl_info* info);
 
+/* TODO: change all of these fields to enforce strict validation */
 static const struct nla_policy ssa_nl_policy[SSA_NL_A_MAX + 1] = {
-        [SSA_NL_A_UNSPEC] = { .type = NLA_UNSPEC },
-	[SSA_NL_A_ID] = { .type = NLA_UNSPEC },
-	[SSA_NL_A_BLOCKING] = { .type = NLA_UNSPEC },
-	[SSA_NL_A_COMM] = { .type = NLA_UNSPEC },
-        [SSA_NL_A_SOCKADDR_INTERNAL] = { .type = NLA_UNSPEC },
-        [SSA_NL_A_SOCKADDR_EXTERNAL] = { .type = NLA_UNSPEC },
-	[SSA_NL_A_SOCKADDR_REMOTE] = { .type = NLA_UNSPEC },
-	[SSA_NL_A_OPTLEVEL] = { .type = NLA_UNSPEC },
-	[SSA_NL_A_OPTNAME] = { .type = NLA_UNSPEC },
-	[SSA_NL_A_OPTVAL] = { .type = NLA_UNSPEC },
-	[SSA_NL_A_RETURN] = { .type = NLA_UNSPEC },
+	[SSA_NL_A_UNSPEC] = {
+		.type = NLA_UNSPEC,
+		.len = 0,
+		.validation_type = NLA_VALIDATE_NONE,
+	},
+	[SSA_NL_A_ID] = {
+		.type = NLA_UNSPEC,
+		.len = 0,
+		.validation_type = NLA_VALIDATE_NONE,
+	},
+	[SSA_NL_A_BLOCKING] = {
+		.type = NLA_UNSPEC,
+		.len = 0,
+		.validation_type = NLA_VALIDATE_NONE,
+	},
+	[SSA_NL_A_COMM] = {
+		.type = NLA_UNSPEC,
+		.len = 0,
+		.validation_type = NLA_VALIDATE_NONE,
+	},
+	[SSA_NL_A_SOCKADDR_INTERNAL] = {
+		.type = NLA_UNSPEC
+		.len = 0,
+		.validation_type = NLA_VALIDATE_NONE,
+	},
+	[SSA_NL_A_SOCKADDR_EXTERNAL] = {
+		.type = NLA_UNSPEC,
+		.len = 0,
+		.validation_type = NLA_VALIDATE_NONE,
+	},
+	[SSA_NL_A_SOCKADDR_REMOTE] = {
+		.type = NLA_UNSPEC,
+		.len = 0,
+		.validation_type = NLA_VALIDATE_NONE,
+	},
+	[SSA_NL_A_OPTLEVEL] = {
+		.type = NLA_UNSPEC,
+		.len = 0,
+		.validation_type = NLA_VALIDATE_NONE,
+	},
+	[SSA_NL_A_OPTNAME] = {
+		.type = NLA_UNSPEC,
+		.len = 0,
+		.validation_type = NLA_VALIDATE_NONE,
+	},
+	[SSA_NL_A_OPTVAL] = {
+		.type = NLA_UNSPEC,
+		.len = 0,
+		.validation_type = NLA_VALIDATE_NONE,
+	},
+	[SSA_NL_A_RETURN] = {
+		.type = NLA_UNSPEC,
+		.len = 0,
+		.validation_type = NLA_VALIDATE_NONE,
+	},
 };
 
 static struct genl_ops ssa_nl_ops[] = {
-        {
-                .cmd = SSA_NL_C_SOCKET_NOTIFY,
-                .flags = GENL_ADMIN_PERM,
-                //.policy = ssa_nl_policy,
-                .doit = nl_fail,
-                .dumpit = NULL,
-        },
-        {
-                .cmd = SSA_NL_C_SETSOCKOPT_NOTIFY,
-                .flags = GENL_ADMIN_PERM,
-                //.policy = ssa_nl_policy,
-                .doit = nl_fail,
-                .dumpit = NULL,
-        },
-        {
-                .cmd = SSA_NL_C_GETSOCKOPT_NOTIFY,
-                .flags = GENL_ADMIN_PERM,
-                //.policy = ssa_nl_policy,
-                .doit = nl_fail,
-                .dumpit = NULL,
-        },
-        {
-                .cmd = SSA_NL_C_BIND_NOTIFY,
-                .flags = GENL_ADMIN_PERM,
-                //.policy = ssa_nl_policy,
-                .doit = nl_fail,
-                .dumpit = NULL,
-        },
-        {
-                .cmd = SSA_NL_C_CONNECT_NOTIFY,
-                .flags = GENL_ADMIN_PERM,
-                //.policy = ssa_nl_policy,
-                .doit = nl_fail,
-                .dumpit = NULL,
-        },
-        {
-                .cmd = SSA_NL_C_LISTEN_NOTIFY,
-                .flags = GENL_ADMIN_PERM,
-                //.policy = ssa_nl_policy,
-                .doit = nl_fail,
-                .dumpit = NULL,
-        },
-        {
-                .cmd = SSA_NL_C_ACCEPT_NOTIFY,
-                .flags = GENL_ADMIN_PERM,
-                //.policy = ssa_nl_policy,
-                .doit = nl_fail,
-                .dumpit = NULL,
-        },
-        {
-                .cmd = SSA_NL_C_CLOSE_NOTIFY,
-                .flags = GENL_ADMIN_PERM,
-                //.policy = ssa_nl_policy,
-                .doit = nl_fail,
-                .dumpit = NULL,
-        },
-        {
-                .cmd = SSA_NL_C_RETURN,
-                .flags = GENL_ADMIN_PERM,
-                //.policy = ssa_nl_policy,
-                .doit = daemon_cb,
-                .dumpit = NULL,
-        },
-        {
-                .cmd = SSA_NL_C_DATA_RETURN,
-                .flags = GENL_ADMIN_PERM,
-                //.policy = ssa_nl_policy,
-                .doit = daemon_data_cb,
-                .dumpit = NULL,
-        },
-        {
-                .cmd = SSA_NL_C_HANDSHAKE_RETURN,
-                .flags = GENL_ADMIN_PERM,
-                //.policy = ssa_nl_policy,
-                .doit = daemon_handshake_cb,
-                .dumpit = NULL,
-        },
+	{
+		.cmd = SSA_NL_C_SOCKET_NOTIFY,
+		.flags = GENL_ADMIN_PERM,
+		.doit = nl_fail,
+		.dumpit = NULL,
+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+	},
+	{
+		.cmd = SSA_NL_C_SETSOCKOPT_NOTIFY,
+		.flags = GENL_ADMIN_PERM,
+		.doit = nl_fail,
+		.dumpit = NULL,
+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+	},
+	{
+		.cmd = SSA_NL_C_GETSOCKOPT_NOTIFY,
+		.flags = GENL_ADMIN_PERM,
+		.doit = nl_fail,
+		.dumpit = NULL,
+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+	},
+	{
+		.cmd = SSA_NL_C_BIND_NOTIFY,
+		.flags = GENL_ADMIN_PERM,
+		.doit = nl_fail,
+		.dumpit = NULL,
+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+	},
+	{
+		.cmd = SSA_NL_C_CONNECT_NOTIFY,
+		.flags = GENL_ADMIN_PERM,
+		.doit = nl_fail,
+		.dumpit = NULL,
+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+	},
+	{
+		.cmd = SSA_NL_C_LISTEN_NOTIFY,
+		.flags = GENL_ADMIN_PERM,
+		.doit = nl_fail,
+		.dumpit = NULL,
+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+	},
+	{
+		.cmd = SSA_NL_C_ACCEPT_NOTIFY,
+		.flags = GENL_ADMIN_PERM,
+		.doit = nl_fail,
+		.dumpit = NULL,
+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+	},
+	{
+		.cmd = SSA_NL_C_CLOSE_NOTIFY,
+		.flags = GENL_ADMIN_PERM,
+		.doit = nl_fail,
+		.dumpit = NULL,
+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+	},
+	{
+		.cmd = SSA_NL_C_RETURN,
+		.flags = GENL_ADMIN_PERM,
+		.doit = daemon_cb,
+		.dumpit = NULL,
+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+	},
+	{
+		.cmd = SSA_NL_C_DATA_RETURN,
+		.flags = GENL_ADMIN_PERM,
+		.doit = daemon_data_cb,
+		.dumpit = NULL,
+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+	},
+	{
+		.cmd = SSA_NL_C_HANDSHAKE_RETURN,
+		.flags = GENL_ADMIN_PERM,
+		.doit = daemon_handshake_cb,
+		.dumpit = NULL,
+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+	},
 };
 
 static const struct genl_multicast_group ssa_nl_grps[] = {
@@ -108,16 +153,22 @@ static const struct genl_multicast_group ssa_nl_grps[] = {
 };
 
 static struct genl_family ssa_nl_family = {
-        .module = THIS_MODULE,
-        .ops = ssa_nl_ops,
-        .n_ops = ARRAY_SIZE(ssa_nl_ops),
-        .mcgrps = ssa_nl_grps,
-        .n_mcgrps = ARRAY_SIZE(ssa_nl_grps),
-        .hdrsize = 0,
-        .name = "SSA",
-        .version = 1,
-        .maxattr = SSA_NL_A_MAX,
-				.policy = ssa_nl_policy,
+	.hdrsize = 0,
+	.name = "SSA",
+	.version = 1,
+	.maxattr = SSA_NL_A_MAX,
+	.netnsok = 0,
+	.parallel_ops = 0,
+	.policy = ssa_nl_policy,
+	.pre_doit = NULL,
+	.post_doit = NULL,
+	.mcast_bind = NULL,
+	.mcast_unbind = NULL,
+	.ops = ssa_nl_ops,
+	.mcgrps = ssa_nl_grps,
+	.n_ops = ARRAY_SIZE(ssa_nl_ops),
+	.n_mcgrps = ARRAY_SIZE(ssa_nl_grps),
+	.module = THIS_MODULE,
 };
 
 int nl_fail(struct sk_buff* skb, struct genl_info* info) {
