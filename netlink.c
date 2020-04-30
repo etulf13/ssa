@@ -194,6 +194,7 @@ int daemon_cb(struct sk_buff* skb, struct genl_info* info) {
 	key = nla_get_u64(na);
 	if ((na = info->attrs[SSA_NL_A_RETURN]) == NULL) {
 		printk(KERN_ALERT "Netlink: Unable to get return value\n");
+		return -1;
 	}
 	response = nla_get_u32(na);
 
@@ -227,7 +228,7 @@ int daemon_data_cb(struct sk_buff* skb, struct genl_info* info) {
 	data = nla_data(na);
 	len = nla_len(na);
 	report_data_return(key, data, len);
-        return 0;
+    return 0;
 }
 
 int daemon_handshake_cb(struct sk_buff* skb, struct genl_info* info) {
@@ -248,6 +249,7 @@ int daemon_handshake_cb(struct sk_buff* skb, struct genl_info* info) {
 	key = nla_get_u64(na);
 	if ((na = info->attrs[SSA_NL_A_RETURN]) == NULL) {
 		printk(KERN_ALERT "Netlink: unable to get return value\n");
+		return -1;
 	}
 	response = nla_get_u32(na);
 
@@ -299,13 +301,11 @@ int send_socket_notification(unsigned long id, char* comm, int port_id) {
 		return -1;
 	}
 	genlmsg_end(skb, msg_head);
-	/*ret = genlmsg_multicast(&ssa_nl_family, skb, 0, SSA_NL_NOTIFY, GFP_KERNEL);
-	if (ret != 0) {
-		printk(KERN_ALERT "Failed in gemlmsg_multicast [socket notify] (%d)\n", ret);
-	}*/
+
 	ret = genlmsg_unicast(&init_net, skb, port_id);
 	if (ret != 0) {
-		printk(KERN_ALERT "Failed in gemlmsg_unicast [socket notify]\n (%d)", ret);
+		printk(KERN_ALERT "Failed in genlmsg_unicast [socket notify]\n (%d)", ret);
+		return -1;
 	}
 
 	printk(KERN_INFO "Successfully sent socket notification for id: %lu\n", id);
@@ -359,13 +359,11 @@ int send_setsockopt_notification(unsigned long id, int level, int optname, void*
 		return -1;
 	}
 	genlmsg_end(skb, msg_head);
-	/*ret = genlmsg_multicast(&ssa_nl_family, skb, 0, SSA_NL_NOTIFY, GFP_KERNEL);
-	if (ret != 0) {
-		printk(KERN_ALERT "Failed in gemlmsg_multicast [setsockopt notify] (%d)\n", ret);
-	}*/
+
 	ret = genlmsg_unicast(&init_net, skb, port_id);
 	if (ret != 0) {
 		printk(KERN_ALERT "Failed in gemlmsg_unicast [setsockopt notify]\n (%d)", ret);
+		return -1;
 	}
 
 	printk(KERN_INFO "Successfully sent setsockopt notification for id: %lu\n", id);
@@ -410,13 +408,11 @@ int send_getsockopt_notification(unsigned long id, int level, int optname, int p
 		return -1;
 	}
 	genlmsg_end(skb, msg_head);
-	/*ret = genlmsg_multicast(&ssa_nl_family, skb, 0, SSA_NL_NOTIFY, GFP_KERNEL);
-	if (ret != 0) {
-		printk(KERN_ALERT "Failed in gemlmsg_multicast [getsockopt notify] (%d)\n", ret);
-	}*/
+
 	ret = genlmsg_unicast(&init_net, skb, port_id);
 	if (ret != 0) {
 		printk(KERN_ALERT "Failed in gemlmsg_unicast [getsockopt notify]\n (%d)", ret);
+		return -1;
 	}
 	return 0;
 }
@@ -427,8 +423,6 @@ int send_bind_notification(unsigned long id, struct sockaddr* int_addr, struct s
 	void* msg_head;
 	int msg_size = nla_total_size(sizeof(unsigned long)) +
 			2 * nla_total_size(sizeof(struct sockaddr));
-
-
 
 	skb = genlmsg_new(msg_size, GFP_KERNEL);
 	if (skb == NULL) {
@@ -460,13 +454,11 @@ int send_bind_notification(unsigned long id, struct sockaddr* int_addr, struct s
 		return -1;
 	}
 	genlmsg_end(skb, msg_head);
-	/*ret = genlmsg_multicast(&ssa_nl_family, skb, 0, SSA_NL_NOTIFY, GFP_KERNEL);
-	if (ret != 0) {
-		printk(KERN_ALERT "Failed in gemlmsg_multicast [bind notify] (%d)\n", ret);
-	}*/
+
 	ret = genlmsg_unicast(&init_net, skb, port_id);
 	if (ret != 0) {
 		printk(KERN_ALERT "Failed in gemlmsg_unicast [bind notify]\n (%d)", ret);
+		return -1;
 	}
 	return 0;
 }
@@ -517,13 +509,11 @@ int send_connect_notification(unsigned long id, struct sockaddr* int_addr, struc
 		return -1;
 	}
 	genlmsg_end(skb, msg_head);
-	/*ret = genlmsg_multicast(&ssa_nl_family, skb, 0, SSA_NL_NOTIFY, GFP_KERNEL);
-	if (ret != 0) {
-		printk(KERN_ALERT "Failed in gemlmsg_multicast [connect notify]\n (%d)", ret);
-	}*/
+
 	ret = genlmsg_unicast(&init_net, skb, port_id);
 	if (ret != 0) {
 		printk(KERN_ALERT "Failed in gemlmsg_unicast [connect notify]\n (%d)", ret);
+		return -1;
 	}
 
 	printk(KERN_INFO "Successfully sent connect notification for id: %lu\n", id);
@@ -568,13 +558,11 @@ int send_listen_notification(unsigned long id, struct sockaddr* int_addr, struct
 		return -1;
 	}
 	genlmsg_end(skb, msg_head);
-	/*ret = genlmsg_multicast(&ssa_nl_family, skb, 0, SSA_NL_NOTIFY, GFP_KERNEL);
-	if (ret != 0) {
-		printk(KERN_ALERT "Failed in gemlmsg_multicast [listen notify] (%d)\n", ret);
-	}*/
+
 	ret = genlmsg_unicast(&init_net, skb, port_id);
 	if (ret != 0) {
 		printk(KERN_ALERT "Failed in gemlmsg_unicast [listen notify]\n (%d)", ret);
+		return -1;
 	}
 	return 0;
 }
@@ -611,13 +599,11 @@ int send_accept_notification(unsigned long id, struct sockaddr* int_addr, int po
 		return -1;
 	}
 	genlmsg_end(skb, msg_head);
-	/*ret = genlmsg_multicast(&ssa_nl_family, skb, 0, SSA_NL_NOTIFY, GFP_KERNEL);
-	if (ret != 0) {
-		printk(KERN_ALERT "Failed in gemlmsg_multicast [accept notify] (%d)\n", ret);
-	}*/
+
 	ret = genlmsg_unicast(&init_net, skb, port_id);
 	if (ret != 0) {
 		printk(KERN_ALERT "Failed in gemlmsg_unicast [accept notify]\n (%d)", ret);
+		return -1;
 	}
 	return 0;
 }
@@ -648,14 +634,11 @@ int send_close_notification(unsigned long id, int port_id) {
 		return -1;
 	}
 	genlmsg_end(skb, msg_head);
-	/*ret = genlmsg_multicast(&ssa_nl_family, skb, 0, SSA_NL_NOTIFY, GFP_ATOMIC);
-	if (ret != 0) {
-		printk(KERN_ALERT "Failed in gemlmsg_multicast [close notify] (%d)\n", ret);
 
-	}*/
 	ret = genlmsg_unicast(&init_net, skb, port_id);
 	if (ret != 0) {
 		printk(KERN_ALERT "Failed in gemlmsg_unicast [close notify]\n (%d)", ret);
+		return -1;
 	}
 
 	printk(KERN_INFO "Successfully sent close notification for id: %lu\n", id);
