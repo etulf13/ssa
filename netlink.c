@@ -9,97 +9,142 @@ int daemon_cb(struct sk_buff* skb, struct genl_info* info);
 int daemon_data_cb(struct sk_buff* skb, struct genl_info* info);
 int daemon_handshake_cb(struct sk_buff* skb, struct genl_info* info);
 
+/* TODO: change all of these fields to enforce strict validation */
 static const struct nla_policy ssa_nl_policy[SSA_NL_A_MAX + 1] = {
-	[SSA_NL_A_UNSPEC] = { .type = NLA_UNSPEC },
-	[SSA_NL_A_ID] = { .type = NLA_UNSPEC },
-	[SSA_NL_A_BLOCKING] = { .type = NLA_UNSPEC },
-	[SSA_NL_A_COMM] = { .type = NLA_UNSPEC },
-	[SSA_NL_A_SOCKADDR_INTERNAL] = { .type = NLA_UNSPEC },
-	[SSA_NL_A_SOCKADDR_EXTERNAL] = { .type = NLA_UNSPEC },
-	[SSA_NL_A_SOCKADDR_REMOTE] = { .type = NLA_UNSPEC },
-	[SSA_NL_A_OPTLEVEL] = { .type = NLA_UNSPEC },
-	[SSA_NL_A_OPTNAME] = { .type = NLA_UNSPEC },
-	[SSA_NL_A_OPTVAL] = { .type = NLA_UNSPEC },
-	[SSA_NL_A_RETURN] = { .type = NLA_UNSPEC },
+	[SSA_NL_A_UNSPEC] = {
+		.type = NLA_UNSPEC,
+		.len = 0,
+		.validation_type = NLA_VALIDATE_NONE,
+	},
+	[SSA_NL_A_ID] = {
+		.type = NLA_UNSPEC,
+		.len = 0,
+		.validation_type = NLA_VALIDATE_NONE,
+	},
+	[SSA_NL_A_BLOCKING] = {
+		.type = NLA_UNSPEC,
+		.len = 0,
+		.validation_type = NLA_VALIDATE_NONE,
+	},
+	[SSA_NL_A_COMM] = {
+		.type = NLA_UNSPEC,
+		.len = 0,
+		.validation_type = NLA_VALIDATE_NONE,
+	},
+	[SSA_NL_A_SOCKADDR_INTERNAL] = {
+		.type = NLA_UNSPEC,
+		.len = 0,
+		.validation_type = NLA_VALIDATE_NONE,
+	},
+	[SSA_NL_A_SOCKADDR_EXTERNAL] = {
+		.type = NLA_UNSPEC,
+		.len = 0,
+		.validation_type = NLA_VALIDATE_NONE,
+	},
+	[SSA_NL_A_SOCKADDR_REMOTE] = {
+		.type = NLA_UNSPEC,
+		.len = 0,
+		.validation_type = NLA_VALIDATE_NONE,
+	},
+	[SSA_NL_A_OPTLEVEL] = {
+		.type = NLA_UNSPEC,
+		.len = 0,
+		.validation_type = NLA_VALIDATE_NONE,
+	},
+	[SSA_NL_A_OPTNAME] = {
+		.type = NLA_UNSPEC,
+		.len = 0,
+		.validation_type = NLA_VALIDATE_NONE,
+	},
+	[SSA_NL_A_OPTVAL] = {
+		.type = NLA_UNSPEC,
+		.len = 0,
+		.validation_type = NLA_VALIDATE_NONE,
+	},
+	[SSA_NL_A_RETURN] = {
+		.type = NLA_UNSPEC,
+		.len = 0,
+		.validation_type = NLA_VALIDATE_NONE,
+	},
 };
 
 static struct genl_ops ssa_nl_ops[] = {
 	{
 		.cmd = SSA_NL_C_SOCKET_NOTIFY,
 		.flags = GENL_ADMIN_PERM,
-		.policy = ssa_nl_policy,
 		.doit = nl_fail,
 		.dumpit = NULL,
+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
 	},
 	{
 		.cmd = SSA_NL_C_SETSOCKOPT_NOTIFY,
 		.flags = GENL_ADMIN_PERM,
-		.policy = ssa_nl_policy,
 		.doit = nl_fail,
 		.dumpit = NULL,
+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
 	},
 	{
 		.cmd = SSA_NL_C_GETSOCKOPT_NOTIFY,
 		.flags = GENL_ADMIN_PERM,
-		.policy = ssa_nl_policy,
 		.doit = nl_fail,
 		.dumpit = NULL,
+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
 	},
 	{
 		.cmd = SSA_NL_C_BIND_NOTIFY,
 		.flags = GENL_ADMIN_PERM,
-		.policy = ssa_nl_policy,
 		.doit = nl_fail,
 		.dumpit = NULL,
+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
 	},
 	{
 		.cmd = SSA_NL_C_CONNECT_NOTIFY,
 		.flags = GENL_ADMIN_PERM,
-		.policy = ssa_nl_policy,
 		.doit = nl_fail,
 		.dumpit = NULL,
+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
 	},
 	{
 		.cmd = SSA_NL_C_LISTEN_NOTIFY,
 		.flags = GENL_ADMIN_PERM,
-		.policy = ssa_nl_policy,
 		.doit = nl_fail,
 		.dumpit = NULL,
+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
 	},
 	{
 		.cmd = SSA_NL_C_ACCEPT_NOTIFY,
 		.flags = GENL_ADMIN_PERM,
-		.policy = ssa_nl_policy,
 		.doit = nl_fail,
 		.dumpit = NULL,
+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
 	},
 	{
 		.cmd = SSA_NL_C_CLOSE_NOTIFY,
 		.flags = GENL_ADMIN_PERM,
-		.policy = ssa_nl_policy,
 		.doit = nl_fail,
 		.dumpit = NULL,
+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
 	},
 	{
 		.cmd = SSA_NL_C_RETURN,
 		.flags = GENL_ADMIN_PERM,
-		.policy = ssa_nl_policy,
 		.doit = daemon_cb,
 		.dumpit = NULL,
+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
 	},
 	{
 		.cmd = SSA_NL_C_DATA_RETURN,
 		.flags = GENL_ADMIN_PERM,
-		.policy = ssa_nl_policy,
 		.doit = daemon_data_cb,
 		.dumpit = NULL,
+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
 	},
 	{
 		.cmd = SSA_NL_C_HANDSHAKE_RETURN,
 		.flags = GENL_ADMIN_PERM,
-		.policy = ssa_nl_policy,
 		.doit = daemon_handshake_cb,
 		.dumpit = NULL,
+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
 	},
 };
 
@@ -108,15 +153,22 @@ static const struct genl_multicast_group ssa_nl_grps[] = {
 };
 
 static struct genl_family ssa_nl_family = {
-	.module = THIS_MODULE,
-	.ops = ssa_nl_ops,
-	.n_ops = ARRAY_SIZE(ssa_nl_ops),
-	.mcgrps = ssa_nl_grps,
-	.n_mcgrps = ARRAY_SIZE(ssa_nl_grps),
 	.hdrsize = 0,
 	.name = "SSA",
 	.version = 1,
 	.maxattr = SSA_NL_A_MAX,
+	.netnsok = 0,
+	.parallel_ops = 0,
+	.policy = ssa_nl_policy,
+	.pre_doit = NULL,
+	.post_doit = NULL,
+	.mcast_bind = NULL,
+	.mcast_unbind = NULL,
+	.ops = ssa_nl_ops,
+	.mcgrps = ssa_nl_grps,
+	.n_ops = ARRAY_SIZE(ssa_nl_ops),
+	.n_mcgrps = ARRAY_SIZE(ssa_nl_grps),
+	.module = THIS_MODULE,
 };
 
 int nl_fail(struct sk_buff* skb, struct genl_info* info) {
@@ -132,6 +184,7 @@ int daemon_cb(struct sk_buff* skb, struct genl_info* info) {
 	struct nlattr* na;
 	unsigned long key;
 	int response;
+
 	if (info == NULL) {
 		printk(KERN_ALERT "Netlink: Message info is null\n");
 		return -1;
@@ -143,8 +196,10 @@ int daemon_cb(struct sk_buff* skb, struct genl_info* info) {
 	key = nla_get_u64(na);
 	if ((na = info->attrs[SSA_NL_A_RETURN]) == NULL) {
 		printk(KERN_ALERT "Netlink: Unable to get return value\n");
+		return -1;
 	}
 	response = nla_get_u32(na);
+
 	report_return(key, response);
         return 0;
 }
@@ -158,6 +213,7 @@ int daemon_data_cb(struct sk_buff* skb, struct genl_info* info) {
 	unsigned long key;
 	unsigned int len;
 	char* data;
+
 	if (info == NULL) {
 		printk(KERN_ALERT "Netlink: Message info is null\n");
 		return -1;
@@ -174,7 +230,7 @@ int daemon_data_cb(struct sk_buff* skb, struct genl_info* info) {
 	data = nla_data(na);
 	len = nla_len(na);
 	report_data_return(key, data, len);
-        return 0;
+    return 0;
 }
 
 /**
@@ -185,6 +241,7 @@ int daemon_handshake_cb(struct sk_buff* skb, struct genl_info* info) {
 	struct nlattr* na;
 	unsigned long key;
 	int response;
+
 	if (info == NULL) {
 		printk(KERN_ALERT "Netlink: Message info is null\n");
 		return -1;
@@ -196,10 +253,11 @@ int daemon_handshake_cb(struct sk_buff* skb, struct genl_info* info) {
 	key = nla_get_u64(na);
 	if ((na = info->attrs[SSA_NL_A_RETURN]) == NULL) {
 		printk(KERN_ALERT "Netlink: unable to get return value\n");
+		return -1;
 	}
 	response = nla_get_u32(na);
 	report_handshake_finished(key, response);
-        return 0;
+	return 0;
 }
 
 int register_netlink() {
@@ -246,13 +304,11 @@ int send_socket_notification(unsigned long id, char* comm, int port_id) {
 		return -1;
 	}
 	genlmsg_end(skb, msg_head);
-	/*ret = genlmsg_multicast(&ssa_nl_family, skb, 0, SSA_NL_NOTIFY, GFP_KERNEL);
-	if (ret != 0) {
-		printk(KERN_ALERT "Failed in gemlmsg_multicast [socket notify] (%d)\n", ret);
-	}*/
+
 	ret = genlmsg_unicast(&init_net, skb, port_id);
 	if (ret != 0) {
-		printk(KERN_ALERT "Failed in gemlmsg_unicast [socket notify]\n (%d)", ret);
+		printk(KERN_ALERT "Failed in genlmsg_unicast [socket notify]\n (%d)", ret);
+		return -1;
 	}
 
 	return 0;
@@ -306,13 +362,11 @@ int send_setsockopt_notification(unsigned long id, int level, int optname, void*
 		return -1;
 	}
 	genlmsg_end(skb, msg_head);
-	/*ret = genlmsg_multicast(&ssa_nl_family, skb, 0, SSA_NL_NOTIFY, GFP_KERNEL);
-	if (ret != 0) {
-		printk(KERN_ALERT "Failed in gemlmsg_multicast [setsockopt notify] (%d)\n", ret);
-	}*/
+
 	ret = genlmsg_unicast(&init_net, skb, port_id);
 	if (ret != 0) {
 		printk(KERN_ALERT "Failed in gemlmsg_unicast [setsockopt notify]\n (%d)", ret);
+		return -1;
 	}
 	return 0;
 }
@@ -358,13 +412,11 @@ int send_getsockopt_notification(unsigned long id, int level, int optname, int p
 		return -1;
 	}
 	genlmsg_end(skb, msg_head);
-	/*ret = genlmsg_multicast(&ssa_nl_family, skb, 0, SSA_NL_NOTIFY, GFP_KERNEL);
-	if (ret != 0) {
-		printk(KERN_ALERT "Failed in gemlmsg_multicast [getsockopt notify] (%d)\n", ret);
-	}*/
+
 	ret = genlmsg_unicast(&init_net, skb, port_id);
 	if (ret != 0) {
 		printk(KERN_ALERT "Failed in gemlmsg_unicast [getsockopt notify]\n (%d)", ret);
+		return -1;
 	}
 	return 0;
 }
@@ -410,13 +462,11 @@ int send_bind_notification(unsigned long id, struct sockaddr* int_addr, struct s
 		return -1;
 	}
 	genlmsg_end(skb, msg_head);
-	/*ret = genlmsg_multicast(&ssa_nl_family, skb, 0, SSA_NL_NOTIFY, GFP_KERNEL);
-	if (ret != 0) {
-		printk(KERN_ALERT "Failed in gemlmsg_multicast [bind notify] (%d)\n", ret);
-	}*/
+
 	ret = genlmsg_unicast(&init_net, skb, port_id);
 	if (ret != 0) {
 		printk(KERN_ALERT "Failed in gemlmsg_unicast [bind notify]\n (%d)", ret);
+		return -1;
 	}
 	return 0;
 }
@@ -469,13 +519,11 @@ int send_connect_notification(unsigned long id, struct sockaddr* int_addr, struc
 		return -1;
 	}
 	genlmsg_end(skb, msg_head);
-	/*ret = genlmsg_multicast(&ssa_nl_family, skb, 0, SSA_NL_NOTIFY, GFP_KERNEL);
-	if (ret != 0) {
-		printk(KERN_ALERT "Failed in gemlmsg_multicast [connect notify]\n (%d)", ret);
-	}*/
+
 	ret = genlmsg_unicast(&init_net, skb, port_id);
 	if (ret != 0) {
 		printk(KERN_ALERT "Failed in gemlmsg_unicast [connect notify]\n (%d)", ret);
+		return -1;
 	}
 	return 0;
 }
@@ -521,13 +569,11 @@ int send_listen_notification(unsigned long id, struct sockaddr* int_addr, struct
 		return -1;
 	}
 	genlmsg_end(skb, msg_head);
-	/*ret = genlmsg_multicast(&ssa_nl_family, skb, 0, SSA_NL_NOTIFY, GFP_KERNEL);
-	if (ret != 0) {
-		printk(KERN_ALERT "Failed in gemlmsg_multicast [listen notify] (%d)\n", ret);
-	}*/
+
 	ret = genlmsg_unicast(&init_net, skb, port_id);
 	if (ret != 0) {
 		printk(KERN_ALERT "Failed in gemlmsg_unicast [listen notify]\n (%d)", ret);
+		return -1;
 	}
 	return 0;
 }
@@ -568,13 +614,11 @@ int send_accept_notification(unsigned long id, struct sockaddr* int_addr, int po
 		return -1;
 	}
 	genlmsg_end(skb, msg_head);
-	/*ret = genlmsg_multicast(&ssa_nl_family, skb, 0, SSA_NL_NOTIFY, GFP_KERNEL);
-	if (ret != 0) {
-		printk(KERN_ALERT "Failed in gemlmsg_multicast [accept notify] (%d)\n", ret);
-	}*/
+
 	ret = genlmsg_unicast(&init_net, skb, port_id);
 	if (ret != 0) {
 		printk(KERN_ALERT "Failed in gemlmsg_unicast [accept notify]\n (%d)", ret);
+		return -1;
 	}
 	return 0;
 }
@@ -607,14 +651,10 @@ int send_close_notification(unsigned long id, int port_id) {
 		return -1;
 	}
 	genlmsg_end(skb, msg_head);
-	/*ret = genlmsg_multicast(&ssa_nl_family, skb, 0, SSA_NL_NOTIFY, GFP_ATOMIC);
-	if (ret != 0) {
-		printk(KERN_ALERT "Failed in gemlmsg_multicast [close notify] (%d)\n", ret);
-
-	}*/
 	ret = genlmsg_unicast(&init_net, skb, port_id);
 	if (ret != 0) {
 		printk(KERN_ALERT "Failed in gemlmsg_unicast [close notify]\n (%d)", ret);
+		return -1;
 	}
 	return 0;
 }
