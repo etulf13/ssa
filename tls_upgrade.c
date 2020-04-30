@@ -6,6 +6,7 @@
 #include <linux/fdtable.h>
 #include <linux/file.h>
 #include <linux/fs.h>
+#include <linux/gfp.h>
 #include <linux/spinlock.h>
 #include <linux/err.h>
 #include <linux/socket.h>
@@ -28,10 +29,13 @@ extern int (*orig_tcp_setsockopt)(struct sock*, int, int, char __user*, unsigned
 
 // recieves a message back from the daemon as confirmation of file descriptor reciept
 int recv_con(struct socket* sock) {
-	char buf[1014];
+	char* buf = kcalloc(1, 1014, GFP_KERNEL | __GFP_RETRY_MAYFAIL);
 	struct kvec iov;
 	struct msghdr msg = {0};
 	int err;
+
+	if (buf == NULL)
+		return -1; /* ENOMEM */
 
 	iov.iov_base = buf;
 	iov.iov_len = sizeof(buf);
@@ -44,6 +48,7 @@ int recv_con(struct socket* sock) {
 		printk(KERN_INFO "Got msg(%d) \"%s\"\n", err, buf);
 	}
 
+	kfree(buf);
 	return err;
 }
 
@@ -72,9 +77,9 @@ int sockdup2(int oldfd, struct socket* sock) {
 
 	// NULL out oldfd
 	files->fdt->fd[oldfd] = NULL;
-	
+
 	// replace it with the new
-	fd_install(oldfd, sock->file); 
+	fd_install(oldfd, sock->file);
 
 	// unlock
 	spin_unlock(&files->file_lock);
@@ -129,20 +134,20 @@ ssize_t write_fd(int fd_gift, char* buf, int buf_sz, int port) {
 	} control_un;
 	struct cmsghdr* cmptr;
 
-	error = sock_create(PF_UNIX, SOCK_DGRAM, 0, &sock); 
+	error = sock_create(PF_UNIX, SOCK_DGRAM, 0, &sock);
 	if (error < 0) {
 		printk(KERN_ERR "sock_create error\n");
 		return -1;
 	}
-	
-	
+
+
 	memset(&addr, 0, sizeof(addr));
 	addr.sun_family = AF_UNIX;
 	memcpy(addr.sun_path, tls_upgrade_path, pathlen);
 	addr_len = pathlen + sizeof(sa_family_t);
 
 	printk(KERN_INFO "Connecting to daemon\n");
-	
+
 	error = kernel_connect(sock, (struct sockaddr*)&addr, addr_len, 0);
 	if (error < 0) {
 		printk(KERN_ERR "connect error\n");
@@ -169,10 +174,10 @@ ssize_t write_fd(int fd_gift, char* buf, int buf_sz, int port) {
 	iov.iov_len = buf_sz;
 
 	iov_iter_kvec(&msg.msg_iter, READ | ITER_KVEC, &iov, 1, iov.iov_len);
-	
+
 	// before we send the message, we need to bind so they can send back something as a confirmation
 	self.sun_family = AF_UNIX;
-	
+
 	printk(KERN_INFO "Binding for call back\n");
 
 	// autobind only is invoked if bind size == 2 == sizeof(sa_family_t)
@@ -211,7 +216,7 @@ int hook_tcp_setsockopt(struct sock* sk, int level, int optname, char __user* op
 	struct sockaddr_in daemon_addr;
 	socket_state state;
 	tls_sock_data_t* sock_data;// get_tls_sock_data(unsigned long key);
-	
+
 	//TODO get rid of printfs
 	//printk(KERN_INFO "Hook called\n");
 	// first check if it is our special opt
@@ -226,7 +231,7 @@ int hook_tcp_setsockopt(struct sock* sk, int level, int optname, char __user* op
 			}
 			is_accepting = 0;
 		}
-		
+
 		printk(KERN_INFO "Got TCP_UPGRADE_TLS %d\n", is_accepting);
 		// try to send some info to the server with a unix domain socket
 		// find the fd associated with this sk
@@ -235,7 +240,7 @@ int hook_tcp_setsockopt(struct sock* sk, int level, int optname, char __user* op
 			printk(KERN_ERR "BadBadNotGood Couldn't find sk in fd\n");
 			return -1;
 		}
-		
+
 		printk(KERN_INFO "Making replacement connection\n");
 		// make tls sock
 		error = sock_create_kern(current->nsproxy->net_ns, PF_INET, SOCK_STREAM, IPPROTO_TLS, &new_sock);
@@ -247,11 +252,11 @@ int hook_tcp_setsockopt(struct sock* sk, int level, int optname, char __user* op
 		printk(KERN_INFO "Made replacement connection\n");
 
 		sock_data = get_tls_sock_data((unsigned long)new_sock);
-		
+
 		// on this tcp sock we need to know if this is a connection, unconnected, listening, accepted
 		// check if it is already connected, if so connect it
 		state = sk->sk_socket->state;
-		
+
 		// create the correct message to send
 		con_info_size = snprintf(con_info, MAX_CON_INFO_SIZE, "%d:%lu", is_accepting, (long unsigned int)(void*)new_sock);
 		// gift the original connection
@@ -271,7 +276,7 @@ int hook_tcp_setsockopt(struct sock* sk, int level, int optname, char __user* op
 			daemon_addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
 			daemon_addr.sin_family = AF_INET;
 			daemon_addr.sin_port = htons(sock_data->daemon_id);
-		
+
 			printk(KERN_INFO "Connecting replacement connection\n");
 			error = kernel_connect(new_sock, (struct sockaddr*)&daemon_addr, sizeof(daemon_addr), 0);
 			if (error < 0) {
@@ -280,13 +285,13 @@ int hook_tcp_setsockopt(struct sock* sk, int level, int optname, char __user* op
 				return -1;
 			}
 		}
-		
+
 		// dup2 tls over fd
 		// so we can't acutally use dup_2, so we null out the fd and install it quickly, haha.
 		sockdup2(fd, new_sock);
-		
+
 		return 0;
-	}	
+	}
 
 	return orig_tcp_setsockopt(sk, level, optname, optval, optlen);
 }
