@@ -181,8 +181,6 @@ int daemon_cb(struct sk_buff* skb, struct genl_info* info) {
 	unsigned long key;
 	int response;
 
-	printk(KERN_INFO "Received netlink_notify_kernel message from daemon\n");
-
 	if (info == NULL) {
 		printk(KERN_ALERT "Netlink: Message info is null\n");
 		return -1;
@@ -198,8 +196,6 @@ int daemon_cb(struct sk_buff* skb, struct genl_info* info) {
 	}
 	response = nla_get_u32(na);
 
-	printk(KERN_INFO "netlink_notify_kernel response: %i\n", response);
-
 	report_return(key, response);
         return 0;
 }
@@ -209,8 +205,6 @@ int daemon_data_cb(struct sk_buff* skb, struct genl_info* info) {
 	unsigned long key;
 	unsigned int len;
 	char* data;
-
-	printk(KERN_INFO "Received netlink_notify_kernel data message from daemon\n");
 
 	if (info == NULL) {
 		printk(KERN_ALERT "Netlink: Message info is null\n");
@@ -236,8 +230,6 @@ int daemon_handshake_cb(struct sk_buff* skb, struct genl_info* info) {
 	unsigned long key;
 	int response;
 
-	printk(KERN_INFO "Received handshake notification from daemon\n");
-
 	if (info == NULL) {
 		printk(KERN_ALERT "Netlink: Message info is null\n");
 		return -1;
@@ -252,11 +244,8 @@ int daemon_handshake_cb(struct sk_buff* skb, struct genl_info* info) {
 		return -1;
 	}
 	response = nla_get_u32(na);
-
-	printk(KERN_INFO "Handshake notification response was %i\n", response);
-
 	report_handshake_finished(key, response);
-        return 0;
+	return 0;
 }
 
 int register_netlink() {
@@ -274,8 +263,6 @@ int send_socket_notification(unsigned long id, char* comm, int port_id) {
 	void* msg_head;
 	int msg_size = nla_total_size(sizeof(unsigned long)) +
 			nla_total_size(strlen(comm)+1);
-
-	printk(KERN_INFO "Sending socket notification to daemon; id: %lu\n", id);
 
 	skb = genlmsg_new(msg_size, GFP_KERNEL);
 	if (skb == NULL) {
@@ -307,9 +294,6 @@ int send_socket_notification(unsigned long id, char* comm, int port_id) {
 		printk(KERN_ALERT "Failed in genlmsg_unicast [socket notify]\n (%d)", ret);
 		return -1;
 	}
-
-	printk(KERN_INFO "Successfully sent socket notification for id: %lu\n", id);
-
 	return 0;
 }
 
@@ -320,8 +304,6 @@ int send_setsockopt_notification(unsigned long id, int level, int optname, void*
 	int msg_size = nla_total_size(sizeof(unsigned long)) +
 			2 * nla_total_size(sizeof(int)) +
 			nla_total_size(optlen);
-
-	printk(KERN_INFO "Sending setsockopt notification to daemon for id: %lu\n", id);
 
 	skb = genlmsg_new(msg_size, GFP_KERNEL);
 	if (skb == NULL) {
@@ -365,9 +347,6 @@ int send_setsockopt_notification(unsigned long id, int level, int optname, void*
 		printk(KERN_ALERT "Failed in gemlmsg_unicast [setsockopt notify]\n (%d)", ret);
 		return -1;
 	}
-
-	printk(KERN_INFO "Successfully sent setsockopt notification for id: %lu\n", id);
-
 	return 0;
 }
 
@@ -471,8 +450,6 @@ int send_connect_notification(unsigned long id, struct sockaddr* int_addr, struc
 			nla_total_size(sizeof(int)) +
 			2 * nla_total_size(sizeof(struct sockaddr));
 
-	printk(KERN_INFO "Sending connect notification to daemon for id: %lu\n", id);
-
 	skb = genlmsg_new(msg_size, GFP_KERNEL);
 	if (skb == NULL) {
 		printk(KERN_ALERT "Failed in genlmsg_new [connect notify]\n");
@@ -515,9 +492,6 @@ int send_connect_notification(unsigned long id, struct sockaddr* int_addr, struc
 		printk(KERN_ALERT "Failed in gemlmsg_unicast [connect notify]\n (%d)", ret);
 		return -1;
 	}
-
-	printk(KERN_INFO "Successfully sent connect notification for id: %lu\n", id);
-
 	return 0;
 }
 
@@ -614,8 +588,6 @@ int send_close_notification(unsigned long id, int port_id) {
 	void* msg_head;
 	int msg_size = nla_total_size(sizeof(unsigned long));
 
-	printk(KERN_INFO "Sending close notification to daemon for id: %lu\n", id);
-
 	skb = genlmsg_new(msg_size, GFP_KERNEL);
 	if (skb == NULL) {
 		printk(KERN_ALERT "Failed in genlmsg_new [close notify]\n");
@@ -640,8 +612,5 @@ int send_close_notification(unsigned long id, int port_id) {
 		printk(KERN_ALERT "Failed in gemlmsg_unicast [close notify]\n (%d)", ret);
 		return -1;
 	}
-
-	printk(KERN_INFO "Successfully sent close notification for id: %lu\n", id);
-
 	return 0;
 }
