@@ -211,6 +211,13 @@ int tls_unix_connect(struct socket *sock, struct sockaddr *uaddr, int addr_len, 
 	if (ret != 0) {
 		return ret;
 	}
+
+	/* Now wait for the daemon's accept_cb() */
+	if (wait_for_completion_timeout(&sock_data->sock_event, RESPONSE_TIMEOUT) == 0)
+		return -EHOSTUNREACH;
+	if (sock_data->response != 0)
+		return sock_data->response;
+
 	return 0;
 }
 
