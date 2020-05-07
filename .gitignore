@@ -19,3 +19,4 @@ tls_upgrade.o.ur-safe
 tls_inet.o.ur-safe
 tls_common.o.ur-safe
 .cache.mk
+.vscode/*
