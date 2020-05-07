@@ -19,3 +19,4 @@ modules.order
 tls_common.o.ur-safe
 tls_inet.o.ur-safe
 tls_upgrade.o.ur-safe
+.vscode/*
