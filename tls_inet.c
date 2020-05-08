@@ -299,15 +299,21 @@ int tls_inet_accept(struct socket *sock, struct socket *newsock, int flags, bool
 	tls_sock_data_t* listen_sock_data;
 	tls_sock_data_t* sock_data;
 	int ret;
-	ret = ref_inet_stream_ops.accept(sock, newsock, flags, kern);
-	if (ret != 0) {
-		return ret;
-	}
 
 	listen_sock_data = get_tls_sock_data((unsigned long)sock);
-	if (listen_sock_data == NULL) {
+	if (listen_sock_data == NULL)
 		return -EBADF;
-	}
+
+	/* We need to make sure the daemon's listener didn't keel over and die */
+	ret = wait_for_completion_interruptible(&listen_sock_data->sock_event);
+	if (ret != 0)
+		return -EINTR;
+	if (listen_sock_data->response != 0)
+		return listen_sock_data->response;
+
+	ret = ref_inet_stream_ops.accept(sock, newsock, flags, kern);
+	if (ret != 0)
+		return ret;
 	
 	if ((sock_data = kmalloc(sizeof(tls_sock_data_t), GFP_KERNEL)) == NULL) {
 		printk(KERN_ALERT "kmalloc failed in tls_inet_accept\n");
