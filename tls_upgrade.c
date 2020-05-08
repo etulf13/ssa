@@ -6,6 +6,7 @@
 #include <linux/fdtable.h>
 #include <linux/file.h>
 #include <linux/fs.h>
+#include <linux/gfp.h>
 #include <linux/spinlock.h>
 #include <linux/err.h>
 #include <linux/socket.h>
@@ -28,10 +29,13 @@ extern int (*orig_tcp_setsockopt)(struct sock*, int, int, char __user*, unsigned
 
 // recieves a message back from the daemon as confirmation of file descriptor reciept
 int recv_con(struct socket* sock) {
-	char *buf = kcalloc(1, 1014, GFP_KERNEL);
+	char* buf = kcalloc(1, 1014, GFP_KERNEL | __GFP_RETRY_MAYFAIL);
 	struct kvec iov;
 	struct msghdr msg = {0};
 	int err;
+
+	if (buf == NULL)
+		return -1; /* ENOMEM */
 
 	iov.iov_base = buf;
 	iov.iov_len = sizeof(buf);

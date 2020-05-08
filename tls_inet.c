@@ -208,6 +208,13 @@ int tls_inet_connect(struct socket *sock, struct sockaddr *uaddr, int addr_len, 
 				sock_data->interrupted = 0;
 			}
 		}
+
+		/* Now wait for the daemon's accept_cb() */
+		if (wait_for_completion_timeout(&sock_data->sock_event, RESPONSE_TIMEOUT) == 0)
+			return -EHOSTUNREACH;
+		if (sock_data->response != 0)
+			return sock_data->response;
+
 		return ret;
 	}
 
@@ -233,14 +240,11 @@ int tls_inet_connect(struct socket *sock, struct sockaddr *uaddr, int addr_len, 
 	/* Blocking case */
 	send_connect_notification((unsigned long)sock, &sock_data->int_addr, uaddr, blocking,
 			sock_data->daemon_id);
-	//printk(KERN_ALERT "blocking wait going\n");
-	if (wait_for_completion_timeout(&sock_data->sock_event, HANDSHAKE_TIMEOUT) == 0) {
-		/* Let's lie to the application if the daemon isn't responding */
-		return -EHOSTUNREACH;
-	}
-	if (sock_data->response != 0) {
+	if (wait_for_completion_timeout(&sock_data->sock_event, HANDSHAKE_TIMEOUT) == 0)
+		return -EHOSTUNREACH; /* Lie to the application if the daemon isn't responding */
+
+	if (sock_data->response != 0)
 		return sock_data->response;
-	}
 
 	reroute_addr.sin_port = htons(sock_data->daemon_id);
 	ret = ref_inet_stream_ops.connect(sock, ((struct sockaddr*)&reroute_addr), sizeof(reroute_addr), flags);
@@ -249,8 +253,14 @@ int tls_inet_connect(struct socket *sock, struct sockaddr *uaddr, int addr_len, 
 			sock_data->interrupted = 1;
 		}
 		return ret;
-
 	}
+
+	/* Now wait for the daemon's accept_cb() */
+	if (wait_for_completion_timeout(&sock_data->sock_event, RESPONSE_TIMEOUT) == 0)
+		return -EHOSTUNREACH;
+	if (sock_data->response != 0)
+		return sock_data->response;
+
 	return 0;
 }
 
@@ -289,15 +299,21 @@ int tls_inet_accept(struct socket *sock, struct socket *newsock, int flags, bool
 	tls_sock_data_t* listen_sock_data;
 	tls_sock_data_t* sock_data;
 	int ret;
-	ret = ref_inet_stream_ops.accept(sock, newsock, flags, kern);
-	if (ret != 0) {
-		return ret;
-	}
 
 	listen_sock_data = get_tls_sock_data((unsigned long)sock);
-	if (listen_sock_data == NULL) {
+	if (listen_sock_data == NULL)
 		return -EBADF;
-	}
+
+	/* We need to make sure the daemon's listener didn't keel over and die */
+	ret = wait_for_completion_interruptible(&listen_sock_data->sock_event);
+	if (ret != 0)
+		return -EINTR;
+	if (listen_sock_data->response != 0)
+		return listen_sock_data->response;
+
+	ret = ref_inet_stream_ops.accept(sock, newsock, flags, kern);
+	if (ret != 0)
+		return ret;
 	
 	if ((sock_data = kmalloc(sizeof(tls_sock_data_t), GFP_KERNEL)) == NULL) {
 		printk(KERN_ALERT "kmalloc failed in tls_inet_accept\n");
