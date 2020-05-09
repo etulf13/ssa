@@ -305,11 +305,10 @@ int tls_inet_accept(struct socket *sock, struct socket *newsock, int flags, bool
 		return -EBADF;
 
 	/* We need to make sure the daemon's listener didn't keel over and die */
-	ret = wait_for_completion_interruptible(&listen_sock_data->sock_event);
-	if (ret != 0)
-		return -EINTR;
-	if (listen_sock_data->response != 0)
-		return listen_sock_data->response;
+	if (listen_sock_data->is_error) {
+		/* it keeled over and died on us */
+		return -EBADFD;
+	}
 
 	ret = ref_inet_stream_ops.accept(sock, newsock, flags, kern);
 	if (ret != 0)
@@ -331,7 +330,6 @@ int tls_inet_accept(struct socket *sock, struct socket *newsock, int flags, bool
 	((struct sockaddr_in*)&sock_data->int_addr)->sin_port = inet_sk(newsock->sk)->inet_dport;
 	((struct sockaddr_in*)&sock_data->int_addr)->sin_addr.s_addr = htonl(INADDR_LOOPBACK);
 	send_accept_notification((unsigned long)newsock, &sock_data->int_addr, sock_data->daemon_id);
-	wait_for_completion_timeout(&sock_data->sock_event, RESPONSE_TIMEOUT);
 	return ret;
 }
 

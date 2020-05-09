@@ -122,6 +122,17 @@ void report_data_return(unsigned long key, char* data, unsigned int len) {
 	return;
 }
 
+void report_listening_err(unsigned long key) {
+	tls_sock_data_t* sock_data;
+	sock_data = get_tls_sock_data(key);
+	//BUG_ON(sock_data == NULL);
+	if (sock_data == NULL) {
+		return;
+	}
+	sock_data->is_error = 1;
+	return;
+}
+
 void report_handshake_finished(unsigned long key, int response) {
 	tls_sock_data_t* sock_data;
 	sock_data = get_tls_sock_data(key);
