@@ -136,7 +136,6 @@ static struct genl_ops ssa_nl_ops[] = {
 	{
 		.cmd = SSA_NL_C_LISTEN_ERR,
 		.flags = GENL_ADMIN_PERM,
-		.policy = ssa_nl_policy,
 		.doit = daemon_listen_err_cb,
 		.dumpit = NULL,
 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
@@ -216,7 +215,7 @@ int daemon_cb(struct sk_buff* skb, struct genl_info* info) {
 int daemon_listen_err_cb(struct sk_buff* skb, struct genl_info* info) {
 	struct nlattr* na;
 	unsigned long key;
-	int response;
+
 	if (info == NULL) {
 		printk(KERN_ALERT "SSA: listen_err essage info is null\n");
 		return -1;
