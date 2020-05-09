@@ -6,6 +6,7 @@
 
 int nl_fail(struct sk_buff* skb, struct genl_info* info);
 int daemon_cb(struct sk_buff* skb, struct genl_info* info);
+int daemon_listen_err_cb(struct sk_buff* skb, struct genl_info* info);
 int daemon_data_cb(struct sk_buff* skb, struct genl_info* info);
 int daemon_handshake_cb(struct sk_buff* skb, struct genl_info* info);
 
@@ -133,6 +134,13 @@ static struct genl_ops ssa_nl_ops[] = {
 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
 	},
 	{
+		.cmd = SSA_NL_C_LISTEN_ERR,
+		.flags = GENL_ADMIN_PERM,
+		.policy = ssa_nl_policy,
+		.doit = daemon_listen_err_cb,
+		.dumpit = NULL,
+	},
+	{
 		.cmd = SSA_NL_C_DATA_RETURN,
 		.flags = GENL_ADMIN_PERM,
 		.doit = daemon_data_cb,
@@ -201,7 +209,24 @@ int daemon_cb(struct sk_buff* skb, struct genl_info* info) {
 	response = nla_get_u32(na);
 
 	report_return(key, response);
-        return 0;
+    return 0;
+}
+
+int daemon_listen_err_cb(struct sk_buff* skb, struct genl_info* info) {
+	struct nlattr* na;
+	unsigned long key;
+	int response;
+	if (info == NULL) {
+		printk(KERN_ALERT "SSA: listen_err essage info is null\n");
+		return -1;
+	}
+	if ((na = info->attrs[SSA_NL_A_ID]) == NULL) {
+		printk(KERN_ALERT "SSA: Unable to retrieve listen_err socket ID\n");
+		return -1;
+	}
+	key = nla_get_u64(na);
+	report_listening_err(key);
+    return 0;
 }
 
 /**

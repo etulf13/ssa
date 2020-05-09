@@ -55,8 +55,9 @@ typedef struct tls_sock_data {
 	int int_addrlen;
 	struct sockaddr rem_addr;
 	int rem_addrlen;
-        char *hostname;
+    char *hostname;
 	int is_bound;
+	int is_error;
 	int async_connect;
 	int interrupted; 
 	struct completion sock_event;
@@ -77,6 +78,7 @@ void tls_cleanup(void);
 
 /* Data reporting */
 void report_return(unsigned long key, int ret);
+void report_listening_err(unsigned long key);
 void report_data_return(unsigned long key, char* data, unsigned int len);
 void report_handshake_finished(unsigned long key, int response);
 
