@@ -139,6 +139,7 @@ static struct genl_ops ssa_nl_ops[] = {
 		.policy = ssa_nl_policy,
 		.doit = daemon_listen_err_cb,
 		.dumpit = NULL,
+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
 	},
 	{
 		.cmd = SSA_NL_C_DATA_RETURN,
