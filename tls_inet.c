@@ -330,7 +330,7 @@ int tls_inet_accept(struct socket *sock, struct socket *newsock, int flags, bool
 	((struct sockaddr_in*)&sock_data->int_addr)->sin_port = inet_sk(newsock->sk)->inet_dport;
 	((struct sockaddr_in*)&sock_data->int_addr)->sin_addr.s_addr = htonl(INADDR_LOOPBACK);
 	send_accept_notification((unsigned long)newsock, &sock_data->int_addr, sock_data->daemon_id);
-	if (wait_for_completion_interruptible(sock_data->sock_event) != 0)
+	if (wait_for_completion_interruptible(&sock_data->sock_event) != 0)
 		return -EINTR;
 	return sock_data->response;
 }
