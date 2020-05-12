@@ -299,15 +299,20 @@ int tls_inet_accept(struct socket *sock, struct socket *newsock, int flags, bool
 	tls_sock_data_t* listen_sock_data;
 	tls_sock_data_t* sock_data;
 	int ret;
-	ret = ref_inet_stream_ops.accept(sock, newsock, flags, kern);
-	if (ret != 0) {
-		return ret;
-	}
 
 	listen_sock_data = get_tls_sock_data((unsigned long)sock);
-	if (listen_sock_data == NULL) {
+	if (listen_sock_data == NULL)
 		return -EBADF;
+
+	/* We need to make sure the daemon's listener didn't keel over and die */
+	if (listen_sock_data->is_error) {
+		/* it keeled over and died on us */
+		return -EBADFD;
 	}
+
+	ret = ref_inet_stream_ops.accept(sock, newsock, flags, kern);
+	if (ret != 0)
+		return ret;
 	
 	if ((sock_data = kmalloc(sizeof(tls_sock_data_t), GFP_KERNEL)) == NULL) {
 		printk(KERN_ALERT "kmalloc failed in tls_inet_accept\n");
@@ -325,15 +330,16 @@ int tls_inet_accept(struct socket *sock, struct socket *newsock, int flags, bool
 	((struct sockaddr_in*)&sock_data->int_addr)->sin_port = inet_sk(newsock->sk)->inet_dport;
 	((struct sockaddr_in*)&sock_data->int_addr)->sin_addr.s_addr = htonl(INADDR_LOOPBACK);
 	send_accept_notification((unsigned long)newsock, &sock_data->int_addr, sock_data->daemon_id);
-	wait_for_completion_timeout(&sock_data->sock_event, RESPONSE_TIMEOUT);
-	return ret;
+	if (wait_for_completion_interruptible(&sock_data->sock_event) != 0)
+		return -EINTR;
+	return sock_data->response;
 }
 
 int tls_inet_setsockopt(struct socket *sock, int level, int optname, char __user *optval, unsigned int optlen) {
 	tls_sock_data_t* sock_data = get_tls_sock_data((unsigned long)sock);
-	if (sock_data == NULL) {
+	if (sock_data == NULL)
 		return -EBADF;
-	}
+	
 	return tls_common_setsockopt(sock_data, sock, level, optname, optval, optlen, ref_inet_stream_ops.setsockopt);
 }
 
