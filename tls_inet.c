@@ -209,12 +209,6 @@ int tls_inet_connect(struct socket *sock, struct sockaddr *uaddr, int addr_len, 
 			}
 		}
 
-		/* Now wait for the daemon's accept_cb() */
-		if (wait_for_completion_timeout(&sock_data->sock_event, RESPONSE_TIMEOUT) == 0)
-			return -EHOSTUNREACH;
-		if (sock_data->response != 0)
-			return sock_data->response;
-
 		return ret;
 	}
 
@@ -254,12 +248,6 @@ int tls_inet_connect(struct socket *sock, struct sockaddr *uaddr, int addr_len, 
 		}
 		return ret;
 	}
-
-	/* Now wait for the daemon's accept_cb() */
-	if (wait_for_completion_timeout(&sock_data->sock_event, RESPONSE_TIMEOUT) == 0)
-		return -EHOSTUNREACH;
-	if (sock_data->response != 0)
-		return sock_data->response;
 
 	return 0;
 }
