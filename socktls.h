@@ -25,6 +25,10 @@
 #define TLS_CLIENT_CONNECTION             98
 #define TLS_SERVER_CONNECTION             99
 
+/* TLS versions */
+#define TLS_VERSION_MIN			 102
+#define TLS_VERSION_MAX			 103
+#define TLS_VERSION_CONN		 104
 
 /* TCP options */
 #define TCP_UPGRADE_TLS         33
